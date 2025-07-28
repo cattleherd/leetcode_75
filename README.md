@@ -137,3 +137,68 @@ var gcdOfStrings = function(str1, str2) {
 - `Time Complexity`: O(min(N, M) * (N + M)), where N and M are the lengths of str1 and str2. The loop runs min(N, M) times. Inside the loop, repeat() and the string comparison can take up to O(N + M) time in each iteration, leading to a polynomial time complexity which can be slow for long strings.
 
 - `Space Complexity`: O(N + M). The repeat() method can create new strings that are as long as the input strings, consuming significant space.
+
+
+--- 
+
+### 3. Kids With the Greatest Number of Candies <a name="3-kids-with-the-greatest-number-of-candies"></a>
+**Status:** ✅ Completed
+**Link:** [LeetCode Problem 1431](https://leetcode.com/problems/kids-with-the-greatest-number-of-candies/)
+
+<details>
+  <summary>Click to view problem description</summary>
+  
+  > There are `n` kids with candies. You are given an integer array `candies`, where each `candies[i]` represents the number of candies the `i`th kid has, and an integer `extraCandies`, denoting the number of extra candies that you have.
+  > 
+  > Return a boolean array `result` of length `n`, where `result[i]` is `true` if, after giving the `i`th kid all the `extraCandies`, they will have the **greatest** number of candies among all the kids, or `false` otherwise.
+  >
+  > Note that **multiple** kids can have the **greatest** number of candies.
+  >
+  > **Example 1:**
+  > ```
+  > Input: candies = [2,3,5,1,3], extraCandies = 3
+  > Output: [true,true,true,false,true] 
+  > ```
+  >
+  > **Example 2:**
+  > ```
+  > Input: candies = [4,2,1,1,2], extraCandies = 1
+  > Output: [true,false,false,false,false] 
+  > ```
+  >
+  > **Example 3:**
+  > ```
+  > Input: candies = [12,1,12], extraCandies = 10
+  > Output: [true,false,true]
+  > ```
+
+</details>
+
+#### My Solution
+```javascript
+/**
+ * @param {number[]} candies
+ * @param {number} extraCandies
+ * @return {boolean[]}
+ */
+var kidsWithCandies = function(candies, extraCandies) {
+    let result = [];
+    
+    // Find the greatest number of candies any kid currently has.
+    let largest = Math.max(...candies);
+
+    // Iterate through each kid's candy count.
+    for(let i = 0; i < candies.length; i++){
+        // Check if this kid can have the greatest number of candies.
+        if(candies[i] + extraCandies >= largest){
+            result.push(true);
+        } else {
+            result.push(false);
+        }
+    }
+    return result;
+};
+
+```
+
+---

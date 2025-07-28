@@ -1,30 +1,23 @@
 /**
- * @param {string} str1
- * @param {string} str2
- * @return {string}
+ * @param {number[]} candies
+ * @param {number} extraCandies
+ * @return {boolean[]}
  */
-var gcdOfStrings = function(str1, str2) {
-    let smaller
-    let larger 
-    let match = ''
+var kidsWithCandies = function(candies, extraCandies) {
+    console.log(candies)
+    console.log(extraCandies)
+    let result = []
 
-    if(str1.length > str2.length){
-        larger = str1
-        smaller = str2
-    }else{
-        larger = str2
-        smaller = str1
-    }
-
-    for(let i = 1; i <= smaller.length; i++){
-        let candidate = smaller.slice(0,i)
-        if(candidate.repeat((str1.length/candidate.length)) === str1 && candidate.repeat((str2.length/candidate.length)) === str2  ){
-            match = candidate
+    let largest = Math.max(...candies)
+    for(let i = 0; i < candies.length; i++){
+        if(candies[i] + extraCandies >= largest){
+            result.push("true")
+        }else{
+            result.push("false")
         }
-
     }
-    console.log(match)
-    
+    console.log(result)
+    return result
 };
 
-gcdOfStrings("ABCABCABCABC", "ABCABC")
+kidsWithCandies([4,2,1,1,2],1)
