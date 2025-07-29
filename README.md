@@ -202,3 +202,167 @@ var kidsWithCandies = function(candies, extraCandies) {
 ```
 
 ---
+
+---
+
+### 4. Can Place Flowers <a name="4-can-place-flowers"></a>
+**Status:** ✅ Completed
+**Link:** [LeetCode Problem 605](https://leetcode.com/problems/can-place-flowers/)
+
+<details>
+  <summary>Click to view problem description</summary>
+  
+  > You have a long flowerbed in which some of the plots are planted, and some are not. However, flowers cannot be planted in adjacent plots.
+  >
+  > Given an integer array `flowerbed` containing `0`s and `1`s, where `0` means empty and `1` means not empty, and an integer `n`, return `true` if `n` new flowers can be planted in the `flowerbed` without violating the no-adjacent-flowers rule and `false` otherwise.
+  >
+  > **Example 1:**
+  > ```
+  > Input: flowerbed = [1,0,0,0,1], n = 1
+  > Output: true
+  > ```
+  >
+  > **Example 2:**
+  > ```
+  > Input: flowerbed = [1,0,0,0,1], n = 2
+  > Output: false
+  > ```
+
+</details>
+
+#### My Solution
+```javascript
+/**
+ * @param {number[]} flowerbed
+ * @param {number} n
+ * @return {boolean}
+ */
+var canPlaceFlowers = function(flowerbed, n) {
+    let count = 0;
+    // Iterate through the flowerbed to find empty plots.
+    for (let i = 0; i < flowerbed.length; i++) {
+        // Check if the current plot is empty.
+        if (flowerbed[i] === 0) {
+            // Check if the previous plot is empty (or if it's the beginning of the array).
+            const isLeftEmpty = (i === 0) || (flowerbed[i - 1] === 0);
+            // Check if the next plot is empty (or if it's the end of the array).
+            const isRightEmpty = (i === flowerbed.length - 1) || (flowerbed[i + 1] === 0);
+
+            // If both adjacent plots are empty, we can plant a flower here.
+            if (isLeftEmpty && isRightEmpty) {
+                flowerbed[i] = 1; // Plant the flower.
+                count++; // Increment the count of newly planted flowers.
+            }
+        }
+    }
+    // Return true if we were able to plant at least n flowers.
+    return count >= n;
+};
+
+---
+
+
+### 5. String Compression <a name="5-string-compression"></a>
+**Status:** ✅ Completed
+**Link:** [LeetCode Problem 443](https://leetcode.com/problems/string-compression/)
+
+<details>
+  <summary>Click to view problem description</summary>
+  
+  > Given an array of characters `chars`, compress it using the following algorithm:
+  >
+  > Begin with an empty string `s`. For each group of **consecutive repeating characters** in `chars`:
+  > - If the group's length is 1, append the character to `s`.
+  > - Otherwise, append the character followed by the group's length.
+  >
+  > The compressed string `s` **should not be returned separately**, but instead, be stored **in the input character array `chars`**. Note that group lengths that are 10 or longer will be split into multiple characters in `chars`.
+  >
+  > After you are done **modifying the input array**, return *the new length of the array*.
+  >
+  > You must write an algorithm that uses only constant extra space.
+  >
+  > **Example 1:**
+  > ```
+  > Input: chars = ["a","a","b","b","c","c","c"]
+  > Output: Return 6, and the first 6 characters of the input array should be: ["a","2","b","2","c","3"]
+  > ```
+  >
+  > **Example 2:**
+  > ```
+  > Input: chars = ["a"]
+  > Output: Return 1, and the first character of the input array should be: ["a"]
+  > ```
+  >
+  > **Example 3:**
+  > ```
+  > Input: chars = ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
+  > Output: Return 4, and the first 4 characters of the input array should be: ["a","b","1","2"]
+  > ```
+
+</details>
+
+#### My Solution
+```javascript
+/**
+ * @param {character[]} chars
+ * @return {number}
+ */
+var compress = function(chars) {
+    // 'read' pointer scans the original array.
+    let read = 0;
+    // 'write' pointer indicates the position to write the compressed character/count to.
+    let write = 0;
+
+    while (read < chars.length) {
+        let currentChar = chars[read];
+        let count = 0;
+        
+        // Count consecutive occurrences of currentChar.
+        while (read < chars.length && chars[read] === currentChar) {
+            read++;
+            count++;
+        }
+        
+        // Write the character itself.
+        chars[write] = currentChar;
+        write++;
+        
+        // If the count is greater than 1, write the count as characters.
+        if (count > 1) {
+            let countString = count.toString();
+            for (let i = 0; i < countString.length; i++) {
+                chars[write] = countString[i];
+                write++;
+            }
+        }
+    }
+    // 'write' is now the new length of the compressed array.
+    return write;
+};
+```
+
+> **Note on the if(count > 1) check:**
+> This check is crucial. Without it, the function would incorrectly write the number '1' for single-character groups. This can cause a "runaway" issue where the `write` pointer exceeds the original bounds of relevant data, potentially overwriting characters that the `read` pointer hasn't processed yet, or in JavaScript, expanding the array.
+> 
+> **Example without the check:**
+> If `chars = ["a", "b", "c"]`:
+> 1. It processes "a", `count` is 1. It writes "a" at index 0, then writes "1" at index 1. `chars` becomes `["a", "1", "c"]`.
+> 2. The `read` pointer is now at index 1 (which is now "1"), but it should be looking at the original "b". This leads to incorrect behavior.
+>
+> The `if (count > 1)` guard ensures that only counts for groups larger than one are written, which is the correct logic according to the problem description.
+
+### Complexity Analysis
+- `Time Complexity`: O(N), where N is the length of the `chars` array. Both the `read` and `write` pointers traverse the array at most once from beginning to end.
+
+- `Space Complexity`: O(1). The compression is done in-place. The space used for variables like `count` and `countString` is mostly constant. For numbers like the index values and count, In most programming languages, a number variable uses a fixed amount of memory (e.g., 64 bits) regardless of whether it holds the value 5 or 5,000,000.
+
+However, since countString is a string, its space complexity is proportional to its number of characters. This growth is logarithmic relative to the value of the count. For example:
+
+If count is 9, countString is "9", which is 1 character long.
+If count is 1000, countString is "1000", which is 4 characters long.
+The space required grows with the number of digits, which is proportional to log10(count). In the worst-case scenario where count is roughly equal to N, the space complexity for this single variable is O(log N).
+
+
+
+
+---
