@@ -1,6 +1,17 @@
+# TIP
+
+Make sure to study dynamic programming and matrix/grid problems. Leetcode medium only. Some of the questions were on algomonster.
+
+DFS and matrixes
+
+
 # My LeetCode 75 Journey 🚀
 
 This repository documents my solutions and progress through the **[LeetCode 75](https://leetcode.com/studyplan/leetcode-75/)** study plan. My goal is to master the key patterns needed for technical assessments and to become a more proficient problem-solver.
+
+---
+
+# `Arrays/Strings`
 
 ---
 
@@ -361,8 +372,123 @@ However, since countString is a string, its space complexity is proportional to 
 If count is 9, countString is "9", which is 1 character long.
 If count is 1000, countString is "1000", which is 4 characters long.
 The space required grows with the number of digits, which is proportional to log10(count). In the worst-case scenario where count is roughly equal to N, the space complexity for this single variable is O(log N).
+---
 
+# `Two Pointers`
 
+---
+
+---
+
+# `Dynamic Programming`
+
+Dynamic Programming (DP) is a powerful problem-solving technique used in computer science for optimization problems. The core idea is to break down a complex problem into simpler, overlapping subproblems. You solve each subproblem just once, store its solution, and then use these stored solutions to solve the larger problem.
+
+It's different from simple recursion because it avoids re-calculating the same work over and over. It's different from a "greedy" approach because it considers the overall best path, not just the best immediate choice. House Robber is a classic introduction because the state (`max money up to this house`) and the choices (`rob` or `don't rob`) are very clear.
+
+---
+
+---
+
+# `Dynamic Programming`
+
+Dynamic Programming (DP) is less of a specific algorithm and more of a powerful problem-solving technique. It's an approach to solving complex problems by breaking them down into a collection of simpler, overlapping subproblems.
+
+Think of it as being smart about solving a huge puzzle by first solving the smaller pieces and then using those solved pieces to build up to the final solution. The key is that you **solve each small piece only once** and **remember the answer**, so you never have to waste time re-calculating it. This method is especially useful for optimization problems (like finding the maximum or minimum value) or counting problems (finding the number of ways to do something).
+
+### The Core Principles
+
+For a problem to be solvable with Dynamic Programming, it typically has two key characteristics:
+
+#### 1. Optimal Substructure
+This means that the optimal solution to the main problem can be constructed from the optimal solutions of its subproblems.
+
+*   **Your "House Robber" Example:** The maximum money you can rob from 5 houses (`dp[4]`) depends directly on the optimal solutions for robbing the first 4 houses (`dp[3]`) and the first 3 houses (`dp[2]`). You built the final answer by progressively finding the best answer at each step.
+
+#### 2. Overlapping Subproblems
+This means that a simple recursive solution would end up solving the exact same subproblem multiple times. DP avoids this by storing the results. This storage is often called **memoization** (top-down approach) or **tabulation** (bottom-up approach).
+
+*   **The "House Robber" Example:** A naive recursive `rob(i)` would call `rob(i-1)` and `rob(i-2)`. Then, the `rob(i-1)` call would *also* call `rob(i-2)`, doing the same work twice. 
+
+### When to Think "Dynamic Programming"?
+
+Look for problems that have these clues:
+- The problem asks for a **maximum/minimum** value, the **number of ways** to do something, or if something is **possible**.
+- You have to make a sequence of decisions at each step.
+- A decision at one step affects the available choices at a later step.
+- A "greedy" approach (always making the best local choice) fails.
 
 
 ---
+
+### 6. House Robber <a name="6-house-robber"></a>
+**Status:** ✅ Completed
+**Link:** [LeetCode Problem 198](https://leetcode.com/problems/house-robber/)
+
+<details>
+  <summary>Click to view problem description</summary>
+  
+  > You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing all of them is that **adjacent houses have security systems connected** and **it will automatically contact the police if two adjacent houses were broken into on the same night**.
+  >
+  > Given an integer array `nums` representing the amount of money of each house, return *the maximum amount of money you can rob tonight without alerting the police*.
+  >
+  > **Example 1:**
+  > ```
+  > Input: nums = [1,2,3,1]
+  > Output: 4
+  > Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+  > Total amount you can rob = 1 + 3 = 4.
+  > ```
+  >
+  > **Example 2:**
+  > ```
+  > Input: nums = [2,7,9,3,1]
+  > Output: 12
+  > Explanation: Rob house 1 (money = 2), house 3 (money = 9) and house 5 (money = 1).
+  > Total amount you can rob = 2 + 9 + 1 = 12.
+  > ```
+
+</details>
+
+#### My Solution
+```javascript
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var rob = function(nums) {
+    // This variable will hold the final answer for arrays of length 3+
+    let max;
+    
+    // --- Guard Clauses for Edge Cases ---
+    // If there are no houses, we can't rob anything :(
+    if (nums.length === 0 || !nums) {
+        return 0;
+    // If there is one house, we must rob it. >:D
+    } else if (nums.length === 1) {
+        return nums[0];
+    // If there are two houses, we rob the richer one. $$ 
+    } else if (nums.length === 2) {
+        return Math.max(nums[0], nums[1]);
+    } else {
+        // --- DP Initialization ---
+        // For the second house, the max profit is either robbing it or the first one.
+        // This sets up our DP table correctly.
+        nums[1] = Math.max(nums[0], nums[1]);
+
+        // --- Main DP Loop ---
+        // Iterate from the third house to the end.
+        for (let i = 2; i < nums.length; i++) {
+            // At each house, we have two choices:
+            // 1. Don't rob house `i`: The max profit is the same as the max profit up to `i-1`.
+            // 2. Rob house `i`: The profit is `money in house i` + `max profit up to house i-2`.
+            max = Math.max(nums[i-1], nums[i] + nums[i-2]);
+
+            // Store the result of our choice back into the array.
+            // `nums[i]` now represents the max possible profit robbing houses from 0 to `i`.
+            nums[i] = max;
+        }
+    }
+    // The final element holds the max profit for the entire street.
+    return max;
+};
