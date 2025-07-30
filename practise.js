@@ -1,23 +1,46 @@
 /**
- * @param {number[]} nums
+ * @param {number} n
  * @return {number}
  */
-var rob = function(nums) {
-    let max;
-            if(nums.length === 0 || !nums){
-            return 0
-        }else if(nums.length === 1){
-            return nums[0]
-        }else if(nums.length === 2){
-            return Math.max(nums[0],nums[1])
-        }else{
-            nums[1] = Math.max(nums[0],nums[1])
-     for(let i = 2; i < nums.length; i++){
-        max = Math.max(nums[i-1],nums[i] + nums[i-2])
-        nums[i] = max
-     }
+
+/*
+
+    if(n === 1){
+        return 1
+    }else if(n === 2){
+        return 2
+    }else if(n === 3){
+        return 5
+    }else if(n === 4){
+        
+
+*/
+var numTilings = function(n) {
+    let full = new Array(n+1).fill(0) // num ways to reorganize dominos
+    let topfill = new Array(n+1).fill(0)
+    let bottomfill = new Array(n+1).fill(0)
+
+    //full = full[i-1] + full[i-2] + topfill[i-1] + bottomfill[i-1]
+    //topfill[i-1] = full[i-2] + bottomfill[i-1]
+    //bottomfill[i-1] = full[i-2] + topfill[i-1]
+
+    if(n===0){
+        return 1;
+    }else if(n === 1){
+        return 1;
+    }else if(n === 2){
+        return 2;
     }
-    return max;
+    full[0] = 1;
+    full[1] = 1
+    topfill[1] = 0
+    bottomfill[1] = 0
+    for(let i = 2; i <= n; i++){
+        full[i] = full[i-1] + full[i-2] + topfill[i-1] + bottomfill[i-1]
+        topfill[i] = full[i-2] + bottomfill[i-1]
+        bottomfill[i] = full[i-2] + topfill[i-1]
+    }
+    return full % mod (10**9 + 7)
 };
 
-rob([2,1,1,2])
+numTilings(200)

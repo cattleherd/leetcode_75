@@ -492,3 +492,99 @@ var rob = function(nums) {
     // The final element holds the max profit for the entire street.
     return max;
 };
+
+---
+
+# A Direct Guide to Domino and Tromino Tiling
+
+The key to this problem is a systematic, step-by-step counting method. Instead of trying to find all tilings at once, we calculate the *number of ways* to tile a `2 x i` board by using the known counts for smaller boards (`2 x (i-1)`, `2 x (i-2)`, etc.). This is the essence of Dynamic Programming.
+
+## Defining the States
+
+To build our solution, we must identify all possible shapes of the tiled area's rightmost boundary. At any column `i`, there are only three possible states.
+
+1.  **`full[i]`:** The number of ways to have a **perfectly tiled, rectangular** `2 x i` board.
+    ```
+           Column i
+              ↓
+      +-------+
+      | X X X |
+      +-------+
+      | X X X |
+      +-------+
+    ```
+
+2.  **`topEmpty[i]`:** The number of ways to tile a `2 x i` area, leaving the **top-right cell empty**.
+    ```
+           Column i
+              ↓
+      +-------+
+      | X X X |  <-- Empty
+      +-------+---+
+      | X X X | X |
+      +-------+---+
+    ```
+
+3.  **`bottomEmpty[i]`:** The number of ways to tile a `2 x i` area, leaving the **bottom-right cell empty**.
+    ```
+           Column i
+              ↓
+      +-------+---+
+      | X X X | X |
+      +-------+---+
+      | X X X |  <-- Empty
+      +-------+
+    ```
+
+These three state variables will store the counts we need to solve the problem. Our final goal is the value of `full[n]`.
+
+## The Recurrence Relations (State Transitions)
+
+These are the formulas that describe how to calculate the counts for a state at column `i` using the known counts from previous columns.
+
+---
+### Calculating `full[i]` (a perfect `2 × i` board)
+
+To count the ways to fill a full `2 × i` board, look at the **last tile(s) placed**.  
+There are **four** possibilities:
+
+| Step | Last action | Description | Contribution |
+|------|-------------|-------------|--------------|
+| **A** | **Vertical domino** | Add one vertical domino to a perfect `2 × (i − 1)` board. | `full[i‑1]` |
+| **B** | **Two horizontal dominoes** | Add two horizontal dominoes to a perfect `2 × (i − 2)` board. | `full[i‑2]` |
+| **C** | **Tromino in a `topEmpty` gap** | Fill the lone empty top‑right cell of a `topEmpty[i‑1]` board with an L‑shaped tromino. | `topEmpty[i‑1]` |
+| **D** | **Tromino in a `bottomEmpty` gap** | Fill the lone empty bottom‑right cell of a `bottomEmpty[i‑1]` board the same way. | `bottomEmpty[i‑1]` |
+
+
+full[i] = full[i-1] + full[i-2] + topEmpty[i-1] + bottomEmpty[i-1]
+
+---
+
+### Calculating `topEmpty[i]` and `bottomEmpty[i]` (incomplete boards)
+
+#### `topEmpty[i]` – only the top‑right cell is empty
+
+| Step | Last action | Contribution |
+|------|-------------|--------------|
+| **A** | Place a tromino on a `full[i‑2]` board (covers both cells in column `i‑1` and bottom cell in column `i`). | `full[i‑2]` |
+| **B** | Place a horizontal domino on a `bottomEmpty[i‑1]` board (covers top cells of columns `i‑1` and `i`). | `bottomEmpty[i‑1]` |
+
+
+topEmpty[i] = full[i-2] + bottomEmpty[i-1]
+
+
+---
+
+### Base Cases
+
+| `i` | `full[i]` | `gap[i]` |
+|-----|-----------|----------|
+| 0 | 1 | 0 |
+| 1 | 1 | 0 |
+
+`full[0] = 1`  (empty board),  
+`full[1] = 1`  (one vertical domino),  
+`gap[0] = gap[1] = 0`  (impossible to leave a corner empty).
+
+---
+
