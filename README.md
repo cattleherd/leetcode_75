@@ -541,37 +541,60 @@ There are **four** possibilities:
 | **C** | **Tromino in a `topEmpty` gap** | We can create a full[i] perfect 2 x i board by placing a tromino block on a `topEmpty[i-1]` board with an L‑shaped tromino.  | `topEmpty[i‑1]` |
 | **D** | **Tromino in a `bottomEmpty` gap** | We can create a full[i] perfect 2 x i board by placing a tromino block on `bottomEmpty[i‑1]` board the same way. | `bottomEmpty[i‑1]` |
 
-### Permutations
+### Permutations / Recurrence relation for a fully tiled board
 
 full[i] = full[i-1] + full[i-2] + topEmpty[i-1] + bottomEmpty[i-1]
 
 ---
+```js
+/**
+ * @param {number} n The width of the 2 x n board to be tiled.
+ * @return {number} The number of ways to tile the board, modulo 10^9 + 7.
+ */
+var numTilings = function(n) {
+    // Define a modulo constant to prevent integer overflow for large results.
+    const MOD = 10**9 + 7;
 
-### Calculating `topEmpty[i]` and `bottomEmpty[i]` (incomplete boards)
+    // DP state definitions:
+    // full[i]: The number of ways to completely tile a 2 x i board.
+    // topfill[i]: The number of ways to tile a 2 x i board with the top-right cell empty.
+    // bottomfill[i]: The number of ways to tile a 2 x i board with the bottom-right cell empty.
+    let full = new Array(n + 1).fill(0);
+    let topfill = new Array(n + 1).fill(0);
+    let bottomfill = new Array(n + 1).fill(0);
 
-#### `topEmpty[i]` – only the top‑right cell is empty
+    // Handle trivial cases 
+    if (n === 0) {
+        return 1; // One way to tile a 2x0 board: the empty tiling.
+    }
+    if (n === 1) {
+        return 1; // One way to tile a 2x1 board: one vertical domino.
+    }
 
-| Step | Last action | Contribution |
-|------|-------------|--------------|
-| **A** | Place a tromino on a `full[i‑2]` board (covers both cells in column `i‑1` and bottom cell in column `i`). | `full[i‑2]` |
-| **B** | Place a horizontal domino on a `bottomEmpty[i‑1]` board (covers top cells of columns `i‑1` and `i`). | `bottomEmpty[i‑1]` |
+    // --- Base Cases for the DP ---
+    // For a 2x0 board, there's one way to tile it (do nothing).
+    full[0] = 1;
+    
+    // For a 2x1 board:
+    full[1] = 1;         // One vertical domino.
+    topfill[1] = 0;      // Impossible to leave a top gap.
+    bottomfill[1] = 0;   // Impossible to leave a bottom gap.
 
+    // Iterate from i = 2 up to n, building the solution from the base cases.
+    for (let i = 2; i <= n; i++) {
+        // Calculate the number of ways to fully tile a 2 x i board.
+        full[i] = (full[i - 1] + full[i - 2] + topfill[i - 1] + bottomfill[i - 1]) % MOD;
+        
+        // Calculate the number of ways to have a top-right gap on a 2 x i board.
+        topfill[i] = (full[i - 2] + bottomfill[i - 1]) % MOD;
+        
+        // Calculate the number of ways to have a bottom-right gap on a 2 x i board.
+        bottomfill[i] = (full[i - 2] + topfill[i - 1]) % MOD;
+    }
 
-topEmpty[i] = full[i-2] + bottomEmpty[i-1]
+    // The final answer is the number of ways to fully tile the 2 x n board.
+    return full[n];
+};
+```
 
-
----
-
-### Base Cases
-
-| `i` | `full[i]` | `gap[i]` |
-|-----|-----------|----------|
-| 0 | 1 | 0 |
-| 1 | 1 | 0 |
-
-`full[0] = 1`  (empty board),  
-`full[1] = 1`  (one vertical domino),  
-`gap[0] = gap[1] = 0`  (impossible to leave a corner empty).
-
----
-
+> ### It's 2025, so this is considered a leetcode 'medium' lol
