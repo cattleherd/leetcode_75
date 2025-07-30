@@ -530,18 +530,18 @@ These three state variables will store the counts we need to solve the problem. 
 These are the formulas that describe how to calculate the counts for a state at column `i` using the known counts from previous columns.
 
 ---
-### Calculating `full[i]` (a perfect `2 × i` board)
 
 To count the ways to fill a full `2 × i` board, look at the **last tile(s) placed**.  
 There are **four** possibilities:
 
 | Step | Last action | Description | Contribution |
 |------|-------------|-------------|--------------|
-| **A** | **Vertical domino** | Add one vertical domino to a perfect `2 × (i − 1)` board. | `full[i‑1]` |
-| **B** | **Two horizontal dominoes** | Add two horizontal dominoes to a perfect `2 × (i − 2)` board. | `full[i‑2]` |
-| **C** | **Tromino in a `topEmpty` gap** | Fill the lone empty top‑right cell of a `topEmpty[i‑1]` board with an L‑shaped tromino. | `topEmpty[i‑1]` |
-| **D** | **Tromino in a `bottomEmpty` gap** | Fill the lone empty bottom‑right cell of a `bottomEmpty[i‑1]` board the same way. | `bottomEmpty[i‑1]` |
+| **A** | **Vertical domino** | We can create a full[i] perfect 2 x i board by placing one vertical domino to a full[i-1] `2 × (i − 1)` board. Thus we must consider the full[i-1] permutation.| `full[i‑1]` |
+| **B** | **Two horizontal dominoes** |  We can create a full[i] perfect 2 x i board by placing two horizontal dominoes to a perfect full[i-2] `2 × (i − 2)` board. Thus we must consider the full[i-2] permutation. | `full[i‑2]` |
+| **C** | **Tromino in a `topEmpty` gap** | We can create a full[i] perfect 2 x i board by placing a tromino block on a `topEmpty[i-1]` board with an L‑shaped tromino.  | `topEmpty[i‑1]` |
+| **D** | **Tromino in a `bottomEmpty` gap** | We can create a full[i] perfect 2 x i board by placing a tromino block on `bottomEmpty[i‑1]` board the same way. | `bottomEmpty[i‑1]` |
 
+### Permutations
 
 full[i] = full[i-1] + full[i-2] + topEmpty[i-1] + bottomEmpty[i-1]
 
