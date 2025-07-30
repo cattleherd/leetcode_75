@@ -379,39 +379,23 @@ The space required grows with the number of digits, which is proportional to log
 
 ---
 
----
 
 # `Dynamic Programming`
 
 Dynamic Programming (DP) is a powerful problem-solving technique used in computer science for optimization problems. The core idea is to break down a complex problem into simpler, overlapping subproblems. You solve each subproblem just once, store its solution, and then use these stored solutions to solve the larger problem.
 
-It's different from simple recursion because it avoids re-calculating the same work over and over. It's different from a "greedy" approach because it considers the overall best path, not just the best immediate choice. House Robber is a classic introduction because the state (`max money up to this house`) and the choices (`rob` or `don't rob`) are very clear.
+It's different from simple recursion because it avoids re-calculating the same work over and over. It's different from a "greedy" approach because it considers the overall best path, not just the best immediate choice. 
 
----
+This method is especially useful for optimization problems (like finding the maximum or minimum value) or counting problems (finding the number of ways to do something).
 
----
-
-# `Dynamic Programming`
-
-Dynamic Programming (DP) is less of a specific algorithm and more of a powerful problem-solving technique. It's an approach to solving complex problems by breaking them down into a collection of simpler, overlapping subproblems.
-
-Think of it as being smart about solving a huge puzzle by first solving the smaller pieces and then using those solved pieces to build up to the final solution. The key is that you **solve each small piece only once** and **remember the answer**, so you never have to waste time re-calculating it. This method is especially useful for optimization problems (like finding the maximum or minimum value) or counting problems (finding the number of ways to do something).
-
-### The Core Principles
-
-For a problem to be solvable with Dynamic Programming, it typically has two key characteristics:
 
 #### 1. Optimal Substructure
 This means that the optimal solution to the main problem can be constructed from the optimal solutions of its subproblems.
 
-*   **Your "House Robber" Example:** The maximum money you can rob from 5 houses (`dp[4]`) depends directly on the optimal solutions for robbing the first 4 houses (`dp[3]`) and the first 3 houses (`dp[2]`). You built the final answer by progressively finding the best answer at each step.
-
 #### 2. Overlapping Subproblems
 This means that a simple recursive solution would end up solving the exact same subproblem multiple times. DP avoids this by storing the results. This storage is often called **memoization** (top-down approach) or **tabulation** (bottom-up approach).
 
-*   **The "House Robber" Example:** A naive recursive `rob(i)` would call `rob(i-1)` and `rob(i-2)`. Then, the `rob(i-1)` call would *also* call `rob(i-2)`, doing the same work twice. 
-
-### When to Think "Dynamic Programming"?
+### When should we think "Dynamic Programming"?
 
 Look for problems that have these clues:
 - The problem asks for a **maximum/minimum** value, the **number of ways** to do something, or if something is **possible**.
