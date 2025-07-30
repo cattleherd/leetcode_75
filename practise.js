@@ -1,46 +1,25 @@
 /**
+ * @param {number} m
  * @param {number} n
  * @return {number}
  */
-
-/*
-
-    if(n === 1){
+var uniquePaths = function(m, n) {
+    if(m === 1 && n == 1){
         return 1
-    }else if(n === 2){
-        return 2
-    }else if(n === 3){
-        return 5
-    }else if(n === 4){
-        
-
-*/
-var numTilings = function(n) {
-    let full = new Array(n+1).fill(0) // num ways to reorganize dominos
-    let topfill = new Array(n+1).fill(0)
-    let bottomfill = new Array(n+1).fill(0)
-
-    //full = full[i-1] + full[i-2] + topfill[i-1] + bottomfill[i-1]
-    //topfill[i-1] = full[i-2] + bottomfill[i-1]
-    //bottomfill[i-1] = full[i-2] + topfill[i-1]
-
-    if(n===0){
-        return 1;
-    }else if(n === 1){
-        return 1;
-    }else if(n === 2){
-        return 2;
     }
-    full[0] = 1;
-    full[1] = 1
-    topfill[1] = 0
-    bottomfill[1] = 0
-    for(let i = 2; i <= n; i++){
-        full[i] = full[i-1] + full[i-2] + topfill[i-1] + bottomfill[i-1]
-        topfill[i] = full[i-2] + bottomfill[i-1]
-        bottomfill[i] = full[i-2] + topfill[i-1]
+    let dp = Array.from({ length: m }, ()=>{
+        return Array(n).fill(0)
+    })
+    for(let i = 1; i < m; i++){
+        dp[i][0]= 1      
     }
-    return full % mod (10**9 + 7)
+    for(let j = 1; j < n; j++){
+        dp[0][j]= 1
+    }
+    for(let i = 1; i < m; i++){
+        for(let j = 1; j < n; j++){
+            dp[i][j] = dp[i][j-1] + dp[i-1][j]
+        }
+    }
+    return dp[m-1][n-1]
 };
-
-numTilings(200)

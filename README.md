@@ -370,6 +370,7 @@ var compress = function(chars) {
 
 However, since countString is a string, its space complexity is proportional to its number of characters. This growth is logarithmic relative to the value of the count. For example:
 
+
 If count is 9, countString is "9", which is 1 character long.
 If count is 1000, countString is "1000", which is 4 characters long.
 The space required grows with the number of digits, which is proportional to log10(count). In the worst-case scenario where count is roughly equal to N, the space complexity for this single variable is O(log N).
@@ -598,3 +599,88 @@ var numTilings = function(n) {
 ```
 
 > ### It's 2025, so this is considered a leetcode 'medium' lol
+
+---
+
+### 62. Unique Paths <a name="62-unique-paths"></a>
+**Status:** ✅ Completed
+**Link:** [LeetCode Problem 62](https://leetcode.com/problems/unique-paths/)
+
+<details>
+  <summary>Click to view problem description</summary>
+  
+  > There is a robot on an m x n grid. The robot is initially located at the top-left corner (i.e., grid[0][0]). The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right at any point in time.
+  >
+  > Given the two integers m and n, return the number of possible unique paths that the robot can take to reach the bottom-right corner.
+  >
+  > The test cases are generated so that the answer will be less than or equal to 2 * 109.
+  >
+  > **Example 1:**
+  > ```
+  > Input: m = 3, n = 7
+  > Output: 28
+  > ```
+  >
+  > **Example 2:**
+  > ```
+  > Input: m = 3, n = 2
+  > Output: 3
+  > ```
+
+</details>
+
+### My Thought Process & Solution Strategy
+
+My approach to solving this problem was to identify a pattern and build the solution from the ground up. This is a classic **Bottom-Up Dynamic Programming** strategy.
+
+1.  **Core Insight:** The key constraint is that the robot can only move **Down** or **Right**. This immediately told me that to reach any given cell `(r, c)`, the robot must have arrived from either the cell directly above, `(r-1, c)`, or the cell directly to the left, `(r, c-1)`.
+
+2.  **The Recurrence Relation:** Based on that insight, I formulated the central rule for this problem: The total number of unique paths to any cell is the sum of the paths to the cell above and the cell to the left.
+    *   `paths(r, c) = paths(r-1, c) + paths(r, c-1)`
+
+3.  **Identifying the Base Cases:** I then considered the "easiest" parts of the grid. For any cell in the very first row, there is only one way to get there: moving right continuously from the start. The same is true for the very first column, where the only way is to move down continuously. This means every cell in the top row and left column represents exactly **1** unique path.
+
+4.  **The DP Matrix Plan:** With the rule and the base cases defined, I planned my algorithm:
+    *   Create an `m x n` matrix (a 2D array, `dp`) to store the number of paths to each cell.
+    *   Initialize the matrix to handle the base cases. A simple way to do this is to set all values in the first row and first column to `1`. 
+    *   Iterate through the rest of the matrix, starting from `dp[1][1]`.
+    *   Apply my recurrence relation (`dp[i][j] = dp[i-1][j] + dp[i][j-1]`) to fill in each cell based on the values I've already computed.
+    *   The final answer is the value stored in the bottom-right corner, `dp[m-1][n-1]`.
+
+---
+
+### Final JavaScript Code
+
+This code implements the bottom-up DP strategy.
+
+```javascript
+/**
+ * @param {number} m
+ * @param {number} n
+ * @return {number}
+ */
+var uniquePaths = function(m, n) {
+    // Edge case: If the grid is just a single row or column, there's only one path.
+    if (m === 1 || n === 1) {
+        return 1;
+    }
+    
+    // Step 1: Create the DP matrix.
+    // I'm initializing the entire m x n grid with 1s. This is a clean way to
+    // set up the base cases, since every cell in the first row and first
+    // column should have a value of 1.
+    const dp = Array.from({ length: m }, () => Array(n).fill(1));
+
+    // Step 2: Fill the rest of the grid using the recurrence relation.
+    // Start iterating from (1, 1) since the 0-th row and 0-th column are
+    // already correctly initialized as our base cases.
+    for (let i = 1; i < m; i++) {
+        for (let j = 1; j < n; j++) {
+            // Apply the core rule: paths to here = paths from above + paths from left.
+            dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+        }
+    }
+
+    // Step 3: The final answer is stored in the bottom-right cell.
+    return dp[m - 1][n - 1];
+};
