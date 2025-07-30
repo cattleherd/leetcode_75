@@ -406,7 +406,7 @@ Look for problems that have these clues:
 
 ---
 
-### 6. House Robber <a name="6-house-robber"></a>
+### 1. House Robber <a name="6-house-robber"></a>
 **Status:** ✅ Completed
 **Link:** [LeetCode Problem 198](https://leetcode.com/problems/house-robber/)
 
@@ -477,6 +477,8 @@ var rob = function(nums) {
     // The final element holds the max profit for the entire street.
     return max;
 };
+
+```
 
 ---
 
