@@ -672,8 +672,6 @@ My approach to solving this problem was to identify a pattern and build the solu
     - Apply my recurrence relation (`dp[i][j] = dp[i-1][j] + dp[i][j-1]`) to fill in each cell based on the values I've already computed.
     - The final answer is the value stored in the bottom-right corner, `dp[m-1][n-1]`.
 
----
-
 ### Final JavaScript Code
 
 This code implements the bottom-up DP strategy.
@@ -710,7 +708,6 @@ var uniquePaths = function(m, n) {
     return dp[m - 1][n - 1];
 };
 ```
----
 
 ### 1143. Longest Common Subsequence <a name="1143-longest-common-subsequence"></a>
 **Status:** ✅ Completed
@@ -824,7 +821,7 @@ var longestCommonSubsequence = function(text1, text2) {
     return dp[m][n];
 
 };
-````
+```
 
 -  The largest subsequence at each point is at the bottom right. For example, largest subsequence of ab and dbab is 2.
 - likewise, the largest subsequence of aba and dbab is 2 as well. since you dont match on the last letter, just propogate 2 to the right, which propogates largest subsequence from the last 2 substr comparisons. 
