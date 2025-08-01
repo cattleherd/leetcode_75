@@ -676,7 +676,7 @@ My approach to solving this problem was to identify a pattern and build the solu
 
 This code implements the bottom-up DP strategy.
 
-````javascript
+```javascript
 /**
  * @param {number} m
  * @param {number} n
@@ -826,3 +826,4 @@ var longestCommonSubsequence = function(text1, text2) {
 -  The largest subsequence at each point is at the bottom right. For example, largest subsequence of ab and dbab is 2.
 - likewise, the largest subsequence of aba and dbab is 2 as well. since you dont match on the last letter, just propogate 2 to the right, which propogates largest subsequence from the last 2 substr comparisons. 
 
+---
