@@ -498,8 +498,11 @@ var rob = function (nums) {
 ```
 
 ---
+### 2. Domino Tromino <a name="Domino Tromino"></a>
 
-# A Direct Guide to Domino and Tromino Tiling
+**Status:** ✅ Completed
+**Link:** [LeetCode Problem 790](https://leetcode.com/problems/domino-and-tromino-tiling/?envType=study-plan-v2&envId=leetcode-75)
+
 
 The key to this problem is a systematic, step-by-step counting method. Instead of trying to find all tilings at once, we calculate the _number of ways_ to tile a `2 x i` board by using the known counts for smaller boards (`2 x (i-1)`, `2 x (i-2)`, etc.). This is the essence of Dynamic Programming.
 
