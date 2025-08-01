@@ -709,7 +709,7 @@ var uniquePaths = function(m, n) {
     // Step 3: The final answer is stored in the bottom-right cell.
     return dp[m - 1][n - 1];
 };
-
+```
 ---
 
 ### 1143. Longest Common Subsequence <a name="1143-longest-common-subsequence"></a>
