@@ -871,8 +871,8 @@ This problem is a classic application of **State Machine Dynamic Programming**. 
 1.  **Core Insight:** At the end of any given day, my financial status can be described in one of two ways: I am either **holding a stock**, or I have **cash on hand (no stock)**. The goal is to maximize my net worth in both of these states every single day.
 
 2.  **The State Variables:** My strategy revolves around tracking two variables as I iterate through the prices:
-    *   `hold`: Represents the maximum possible net worth if I end the day **holding** one share of stock. This value carries the "memory" of my past transactions.
-    *   `cash`: Represents the maximum possible profit if I end the day **not holding** a stock. This is my realized, spendable profit.
+    *   `hold`: Represents the maximum possible `net worth` if I end the day **holding** one share of stock. This value carries the "memory" of my past transactions.
+    *   `cash`: Represents the maximum possible `net worth` if I end the day **not holding** a stock. This is my realized, spendable profit.
 
 3.  **The Recurrence Relation (The Two Golden Rules):** To find the values for the current day, I only need the values from the previous day. This leads to two simple rules for updating my state:
     *   **Rule 1: Calculating the new `cash` value.** To have cash today, I could have either (a) carried over my cash from yesterday, or (b) sold the stock I was holding yesterday. I choose the more profitable option.
@@ -969,3 +969,121 @@ var maxProfit = function(prices, fee) {
 maxProfit([1,3,2,8,4,9], 2)
 
 ```
+
+--- 
+
+### 72. Edit Distance <a name="72-edit-distance"></a>
+**Status:** ✅ Completed
+**Link:** [LeetCode Problem 72](https://leetcode.com/problems/edit-distance/)
+
+<details>
+  <summary>Click to view problem description</summary>
+
+  > Given two strings `word1` and `word2`, return the minimum number of operations required to convert `word1` to `word2`.
+  >
+  > You have the following three operations permitted on a word:
+  > - Insert a character
+  > - Delete a character
+  > - Replace a character
+  >
+  > **Example 1:**
+  > ```
+  > Input: word1 = "horse", word2 = "ros"
+  > Output: 3
+  > Explanation: 
+  > horse -> rorse (replace 'h' with 'r')
+  > rorse -> rose (remove 'r')
+  > rose -> ros (remove 'e')
+  > ```
+  >
+  > **Example 2:**
+  > ```
+  > Input: word1 = "intention", word2 = "execution"
+  > Output: 5
+  > Explanation: 
+  > intention -> inention (remove 't')
+  > inention -> enention (replace 'i' with 'e')
+  > enention -> exention (replace 'n' with 'x')
+  > exention -> exection (replace 'n' with 'c')
+  > exection -> execution (insert 'u')
+  > ```
+
+</details>
+
+### My Thought Process & Solution Strategy
+
+ The key insight is that to find the minimum edit distance between two full strings, I need to consider all possible ways to handle their last characters and choose the cheapest path.
+
+1. **Core Insight:** To transform `word1` into `word2`, I can look at the cost of transforming their prefixes and then decide how to handle the remaining characters. Each cell in my matrix represents the optimal solution to a smaller version of the original problem (besides final bottom right cell).
+
+2. **The State Variables:** I create a 2D matrix where `matrix[i][j]` represents the minimum cost to transform the first `i` characters of `word1` into the first `j` characters of `word2`. 
+
+3. **The Three Path Strategy:** For each cell, I have exactly three possible "scenarios" for how I arrived there, corresponding to the three allowed operations:
+   1. **Diagonal Path (Substitution):** "I already solved the smaller problem for both prefixes, now I handle the current character pair"
+   2. **Top Path (Deletion):** "I already transformed a shorter version of word1 to the full word2 prefix, now I delete the extra character from word1"  
+   3. **Left Path (Insertion):** "I already transformed the full word1 prefix to a shorter version of word2, now I insert the missing character into word2"
+4. **The Decision Rule:** 
+   - **If characters match:** Take the diagonal path for free (no operation needed)
+   - **If characters differ:** Calculate the cost of all three paths and choose the minimum. Since the last character differs, need to add 1 to the cost (due to subsitution, deletion, or insertion)
+
+5. **Base Cases:** 
+   - Transforming empty string to any prefix requires insertions equal to the prefix length
+   - Transforming any prefix to empty string requires deletions equal to the prefix length
+
+6. **Final Answer:** The bottom-right cell contains the minimum edit distance between the complete strings.
+
+```javascript
+/**
+ * @param {string} word1
+ * @param {string} word2
+ * @return {number}
+ */
+
+       /*
+          ""   K   I   T
+    ""    0    1   2   3
+    S     1    1   2   3
+    I     2    2   1   2
+    T     3    3   2   1
+
+    Example: SI->KIT
+    
+    1) DIAGONAL 
+        SI->KIT = S->KI + I->T = 2 + 1 = 3 (subsitution)
+    2) Bottom LEFT
+       SI->KIT = SI->KI + T = 1 + 1 = 2    (insertion)
+    3) Top RIGHT
+       SI->KIT = S->KIT - I = 3 + 1 = 4    (deletion)
+
+       Always take the minimum.
+    */
+
+var minDistance = function(word1, word2) {
+    // Create matrix where matrix[i][j] = min cost to transform word1[0..i-1] to word2[0..j-1]
+    let matrix = Array.from({ length: word1.length + 1 }, () => Array(word2.length + 1).fill(0))
+    
+    // Base cases: transform empty string to prefixes
+    for(let i = 0; i <= word1.length; i++) matrix[i][0] = i  // deletions
+    for(let j = 0; j <= word2.length; j++) matrix[0][j] = j  // insertions
+    
+    // Fill matrix using three-path decision strategy
+    for(let i = 1; i <= word1.length; i++){
+        for(let j = 1; j <= word2.length; j++){                
+            if(word1[i-1] === word2[j-1]){
+                // Characters match - inherit diagonal cost for free
+                matrix[i][j] = matrix[i-1][j-1]
+            } else {
+                // Characters differ - choose cheapest of three operations
+                matrix[i][j] = 1 + Math.min(
+                    matrix[i-1][j-1],  // substitute
+                    matrix[i-1][j],    // delete  
+                    matrix[i][j-1]     // insert
+                )
+            }
+        }
+    }
+    
+    return matrix[word1.length][word2.length]
+};
+
+---
