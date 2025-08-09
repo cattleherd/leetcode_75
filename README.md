@@ -1085,7 +1085,7 @@ var minDistance = function(word1, word2) {
     
     return matrix[word1.length][word2.length]
 };
-
+```
 ---
 
 ### 54. Spiral Matrix <a name="54-spiral-matrix"></a>
