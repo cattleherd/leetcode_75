@@ -1087,3 +1087,110 @@ var minDistance = function(word1, word2) {
 };
 
 ---
+
+### 54. Spiral Matrix <a name="54-spiral-matrix"></a>
+
+**Status:** ✅ Completed
+**Link:** [LeetCode Problem 54](https://leetcode.com/problems/spiral-matrix/)
+
+<details>
+  <summary>Click to view problem description</summary>
+  
+  > Given an `m x n` matrix, return all elements of the matrix in spiral order.
+  >
+  > **Example 1:**
+  > ![Spiral Matrix Example](https://assets.leetcode.com/uploads/2020/11/13/spiral1.jpg)
+  > ```
+  > Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+  > Output: [1,2,3,6,9,8,7,4,5]
+  > ```
+  >
+  > **Example 2:**
+  > ![Spiral Matrix Example 2](https://assets.leetcode.com/uploads/2020/11/13/spiral.jpg)
+  > ```
+  > Input: matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+  > Output: [1,2,3,4,8,12,11,10,9,5,6,7]
+  > ```
+
+</details>
+
+### My Thought Process & Solution Strategy
+
+The key was to use 4 pointers and systematically shrink them or increase them. 
+
+1.  **Core Insight:** The problem can be visualized as "peeling an onion." I need to traverse the outermost layer of the matrix, then the next layer in, and so on, until the entire matrix is visited. This means I'm not just nesting loops, but controlling their bounds dynamically.
+
+2.  **The Boundary Pointer Plan:** To manage the "peeling," I decided to use four pointers to represent the boundaries of the current layer I'm traversing:
+    *   `top`: The index of the top-most row to be traversed.
+    *   `bottom`: The index of the bottom-most row.
+    *   `left`: The index of the left-most column.
+    *   `right`: The index of the right-most column.
+
+3.  **Narrating the Loops:** I broke down the traversal into four distinct movements for each layer:
+    *   **Go Right:** Move from `left` to `right` along the `top` row. After this, the top row is "done," so I increment `top`.
+    *   **Go Down:** Move from `top` to `bottom` along the `right` column. The right column is now done, so I decrement `right`.
+    *   **Go Left:** Move from `right` to `left` along the `bottom` row. The bottom row is done, so I decrement `bottom`.
+    *   **Go Up:** Move from `bottom` to `top` along the `left` column. The left column is done, so I increment `left`.
+
+4.  **Identifying the Invariant:** The core condition that must hold true for my loops to continue is that the boundaries have not crossed. My main `while` loop's condition is `top <= bottom AND left <= right`. As long as this holds, there are still elements (rows or colums) to process. This check naturally handles the end of the traversal.
+
+5.  **Handling Edge Cases:** I realized that after you traverse a row or column, in order to process the next row or column ,you must first check to see if its possible to traverse it. 
+
+  > ![Spiral Matrix Example](https://assets.leetcode.com/uploads/2020/11/13/spiral1.jpg)
+  
+On the second iteration, after you process the top row, you increment top from 1 to 2. Since bottom is still 1, now top > bottom, meaning there are no rows left. You should break before attempting to traverse the right column which means going down the array column elements.
+
+### Final JavaScript Code
+
+This code implements the boundary-tracking strategy. The comments reflect the four-movement plan.
+
+```javascript
+/**
+ * @param {number[][]} matrix
+ * @return {number[]}
+ */
+var spiralOrder = function (matrix) {
+    // Handle empty or invalid matrix
+    if (!matrix || matrix.length === 0) {
+        return [];
+    }
+
+    // Step 1: Initialize the boundary pointers and result array.
+    let top = 0;
+    let bottom = matrix.length - 1;
+    let left = 0;
+    let right = matrix[0].length - 1;
+    const result = [];
+
+    // Step 2:  the main loop.
+    while (top <= bottom && left <= right) {
+        for (let i = left; i <= right; i++) {
+            res.push(matrix[top][i]);
+        }
+        top++;
+        if (top > bottom) {
+            break;
+        }
+        for (let i = top; i <= bottom; i++) {
+            res.push(matrix[i][right]);
+        }
+        right--;
+        if (right < left) {
+            break;
+        }
+        for (let i = right; i >= left; i--) {
+            res.push(matrix[bottom][i]);
+        }
+        bottom--;
+        if (bottom < top) {
+            break;
+        }
+        for (let i = bottom; i >= top; i--) {
+            res.push(matrix[i][left]);
+        }
+        left++;
+  }
+
+    return result;
+};
+```
