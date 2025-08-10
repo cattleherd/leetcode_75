@@ -1,59 +1,31 @@
 /**
- * @param {number} n
- * @return {number[][]}
+ * @param {number[][]} matrix
+ * @return {void} Do not return anything, modify matrix in-place instead.
  */
 
-/*
-123
-894
-765
 
-*/
-var generateMatrix = function (n) {
-  let arr = [];
-  for (let i = n ** 2; i > 0; i--) {
-    arr.push(i);
+var rotate = function (matrix) {
+  for (let i = 0; i < matrix.length - 1; i++) {
+    for (let j = i + 1; j < matrix[0].length; j++) {
+      [matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]];
+    }
   }
-
-  let matrix = Array.from({ length: n }, () => {
-    return Array(n).fill(0);
-  });
-
-  let left = 0;
-  let right = n - 1;
-  let bottom = n - 1;
-  let top = 0;
-  while ((top <= bottom) && (left <= right)) {
-    for (let i = left; i <= right; i++) {
-      matrix[top][i] = arr.pop();
-    }
-    top++;
-
-    if (top > bottom) {
-      break;
-    }
-    for (let i = top; i <= bottom; i++) {
-      matrix[i][right] = arr.pop();
-    }
-    right--;
-
-    if (right < left) {
-      break;
-    }
-    for (let i = right; i >= left; i--) {
-      matrix[bottom][i] = arr.pop();
-    }
-    bottom--;
-
-    if (bottom < top) {
-      break;
-    }
-    for (let i = bottom; i >= top; i--) {
-      matrix[i][left] = arr.pop();
-    }
-    left++;
+  for (let i = 0; i < matrix.length; i++) {
+    matrix[i].reverse();
   }
   return matrix
 };
 
-generateMatrix(3);
+/*
+5  1  9  11     5  2  13  15
+2  4  8  10  -> 1  4  3   14
+13 3  6  7      9  8  6   12
+15 14 12 16     11 10 7   16
+*/
+
+rotate([
+  [5, 1, 9, 11],
+  [2, 4, 8, 10],
+  [13, 3, 6, 7],
+  [15, 14, 12, 16],
+]);

@@ -1198,9 +1198,6 @@ var spiralOrder = function (matrix) {
 ```
 
 ---
-
----
-
 ### 59. Spiral Matrix II <a name="59-spiral-matrix-ii"></a>
 
 **Status:** ✅ Completed
@@ -1283,5 +1280,96 @@ var generateMatrix = function (n) {
     }
 
     return matrix;
+};
+```
+---
+### 48. Rotate Image <a name="48-rotate-image"></a>
+
+**Status:** ✅ Completed
+**Link:** [LeetCode Problem 48](https://leetcode.com/problems/rotate-image/)
+
+<details>
+  <summary>Click to view problem description</summary>
+  
+  > You are given an `n x n` 2D `matrix` representing an image. Rotate the image by 90 degrees (clockwise).
+  >
+  > You have to rotate the image **in-place**, which means you have to modify the input 2D matrix directly. **DO NOT** allocate another 2D matrix and do the rotation.
+  >
+  > **Example 1:**
+  > ![Rotate Image Example 1](https://assets.leetcode.com/uploads/2020/08/28/mat1.jpg)
+  > ```
+  > Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+  > Output: [[7,4,1],[8,5,2],[9,6,3]]
+  > ```
+  >
+  > **Example 2:**
+  > ![Rotate Image Example 2](https://assets.leetcode.com/uploads/2020/08/28/mat2.jpg)
+  > ```
+  > Input: matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]
+  > Output: [[15,13,2,5],[14,3,4,2],[12,6,8,1],[16,7,10,11]]
+  > ```
+
+</details>
+
+### My Thought Process & Solution Strategy
+
+Instead of trying to calculate the final destination of each cell in a single, complex step, I broke the problem down into two simpler, sequential transformations. This insight is the key to solving this problem elegantly in-place.
+
+1.  **Core Insight:** A 90-degree clockwise rotation can be achieved by first **transposing** the matrix and then **reversing** each row.
+
+2.  **Step 1: Transpose the Matrix.**
+    *   A transpose operation flips a matrix over its main diagonal (from top-left to bottom-right). This means that the element at `matrix[i][j]` is swapped with the element at `matrix[j][i]`.
+    *   For example, `matrix[0][1]` swaps with `matrix[1][0]`.
+    *   Visualizing this step:
+        ```
+        Initial Matrix      After Transpose
+        [[1, 2, 3],         [[1, 4, 7],
+         [4, 5, 6],   ==>    [2, 5, 8],
+         [7, 8, 9]]          [3, 6, 9]]
+        ```
+    *   The nested loops `for i` and `for j = i + 1` correctly perform this in-place swap for the upper triangle of the matrix, which is all that's needed.
+
+3.  **Step 2: Reverse Each Row.**
+    *   After the transpose, the numbers are in the correct final columns, but the order within those columns is wrong (they are upside-down).
+    *   By reversing each individual row of the transposed matrix, we move the elements into their correct final positions.
+    *   Visualizing this step:
+        ```
+        Transposed Matrix   After Reversing Each Row
+        [[1, 4, 7],         [[7, 4, 1],
+         [2, 5, 8],   ==>    [8, 5, 2],
+         [3, 6, 9]]          [9, 6, 3]]
+        ```
+    *   This final matrix is the correctly rotated result. A simple loop through each row that calls a `.reverse()` method accomplishes this efficiently.
+
+### Decomposing Matrix Rotations (90°, 180°, 270°)
+
+This two-step process is powerful because different combinations of `Transpose`, `Reverse Rows`, and `Reverse Columns` can achieve any 90-degree interval rotation.
+
+
+### Final JavaScript Code
+
+This code implements the **Transpose + Reverse Rows** strategy for a 90-degree clockwise rotation.
+
+```javascript
+/**
+ * @param {number[][]} matrix
+ * @return {void} Do not return anything, modify matrix in-place instead.
+ */
+var rotate = function (matrix) {
+  // Step 1: Transpose the matrix 
+  // Swap matrix[i][j] with matrix[j][i] (focusing on bottom or top triangle)
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = i; j < matrix[0].length; j++) {
+      [matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]];
+    }
+  }
+
+  // Step 2: Reverse each row of the transposed matrix
+  for (let i = 0; i < matrix.length; i++) {
+    matrix[i].reverse();
+  }
+  
+  // The matrix is now rotated 90 degrees clockwise in-place.
+  return matrix;
 };
 ---
