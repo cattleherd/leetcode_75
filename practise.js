@@ -1,47 +1,59 @@
 /**
- * @param {number[][]} matrix
- * @return {number[]}
+ * @param {number} n
+ * @return {number[][]}
  */
-var spiralOrder = function (matrix) {
-  matrix = [
-    [1, 2, 3, 4],
-    [5, 6, 7, 8],
-    [9, 10, 11, 12],
-  ];
 
-  let top = 0;
-  let right = matrix[0].length - 1;
-  let bottom = matrix.length - 1;
+/*
+123
+894
+765
+
+*/
+var generateMatrix = function (n) {
+  let arr = [];
+  for (let i = n ** 2; i > 0; i--) {
+    arr.push(i);
+  }
+
+  let matrix = Array.from({ length: n }, () => {
+    return Array(n).fill(0);
+  });
+
   let left = 0;
-  let res = [];
+  let right = n - 1;
+  let bottom = n - 1;
+  let top = 0;
   while ((top <= bottom) && (left <= right)) {
     for (let i = left; i <= right; i++) {
-      res.push(matrix[top][i]);
+      matrix[top][i] = arr.pop();
     }
-    top++
-    if(top > bottom){
-        break;
+    top++;
+
+    if (top > bottom) {
+      break;
     }
     for (let i = top; i <= bottom; i++) {
-      res.push(matrix[i][right]);
+      matrix[i][right] = arr.pop();
     }
-    right--
-    if(right < left){
-        break;
+    right--;
+
+    if (right < left) {
+      break;
     }
     for (let i = right; i >= left; i--) {
-      res.push(matrix[bottom][i]);
+      matrix[bottom][i] = arr.pop();
     }
-    bottom--
-    if(bottom < top){
-        break;
+    bottom--;
+
+    if (bottom < top) {
+      break;
     }
     for (let i = bottom; i >= top; i--) {
-      res.push(matrix[i][left]);
+      matrix[i][left] = arr.pop();
     }
     left++;
   }
-  console.log(res)
+  return matrix
 };
 
-spiralOrder();
+generateMatrix(3);

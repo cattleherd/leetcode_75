@@ -1088,6 +1088,8 @@ var minDistance = function(word1, word2) {
 ```
 ---
 
+# Matrices
+
 ### 54. Spiral Matrix <a name="54-spiral-matrix"></a>
 
 **Status:** ✅ Completed
@@ -1194,3 +1196,92 @@ var spiralOrder = function (matrix) {
     return result;
 };
 ```
+
+---
+
+---
+
+### 59. Spiral Matrix II <a name="59-spiral-matrix-ii"></a>
+
+**Status:** ✅ Completed
+**Link:** [LeetCode Problem 59](https://leetcode.com/problems/spiral-matrix-ii/)
+
+<details>
+  <summary>Click to view problem description</summary>
+  
+  > Given a positive integer `n`, generate an `n x n` matrix filled with elements from 1 to `n^2` in spiral order.
+  >
+  > **Example 1:**
+  > ![Spiral Matrix II Example](https://assets.leetcode.com/uploads/2020/11/13/spiraln.jpg)
+  > ```
+  > Input: n = 3
+  > Output: [[1,2,3],[8,9,4],[7,6,5]]
+  > ```
+  >
+  > **Example 2:**
+  > ```
+  > Input: n = 1
+  > Output: [[1]]
+  > ```
+
+</details>
+
+### Final JavaScript Code
+
+This code implements the boundary-tracking strategy to generate the matrix.
+
+```javascript
+/**
+ * @param {number} n
+ * @return {number[][]}
+ */
+var generateMatrix = function (n) {
+    // Step 1: Create a source for numbers 1 to n^2.
+    // By pushing n^2 down to 1, arr.pop() will yield 1, 2, 3, ...
+    const arr = [];
+    for (let i = n * n; i > 0; i--) {
+        arr.push(i);
+    }
+
+    // Step 2: Create the n x n matrix to serve as our canvas, filled with 0s.
+    const matrix = Array.from({ length: n }, () => Array(n).fill(0));
+
+    // Step 3: Initialize the boundary pointers.
+    let left = 0;
+    let right = n - 1;
+    let bottom = n - 1;
+    let top = 0;
+
+    // Step 4: Loop as long as the boundaries have not crossed.
+    while (top <= bottom && left <= right) {
+        // Movement 1: Go Right ->
+        for (let i = left; i <= right; i++) {
+            matrix[top][i] = arr.pop();
+        }
+        top++;
+        if (top > bottom) break;
+
+        // Movement 2: Go Down ↓
+        for (let i = top; i <= bottom; i++) {
+            matrix[i][right] = arr.pop();
+        }
+        right--;
+        if (right < left) break;
+
+        // Movement 3: Go Left <-
+        for (let i = right; i >= left; i--) {
+            matrix[bottom][i] = arr.pop();
+        }
+        bottom--;
+        if (bottom < top) break;
+
+        // Movement 4: Go Up ↑
+        for (let i = bottom; i >= top; i--) {
+            matrix[i][left] = arr.pop();
+        }
+        left++;
+    }
+
+    return matrix;
+};
+---
